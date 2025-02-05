@@ -12,13 +12,12 @@ contract Deployment is Script {
 
     function run() external {
         uint256 deployer = vm.envUint("ANVIL_PRIVATE_KEY");
-        address deployerAddress = vm.addr(deployer);
 
         vm.startBroadcast(deployer);
 
         token = new Token("Test Token", "TST", 1000000);
 
-        vault = new Vault(deployerAddress);
+        vault = new Vault(address(token));
         
         console.log("Vault deployed at:", address(vault));
 

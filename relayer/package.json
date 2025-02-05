@@ -1,0 +1,27 @@
+{
+  "name": "relayer",
+  "version": "1.0.0",
+  "description": "A token bridge relayer between eth and tez.",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "lint": "eslint 'src/**/*.ts'",
+    "build": "tsc"
+  },
+  "author": "Gaetan Cabaret",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^22.13.1",
+    "eslint": "^9.19.0",
+    "globals": "^15.14.0",
+    "prettier": "^3.4.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.23.0"
+  },
+  "dependencies": {
+    "@taquito/taquito": "^21.0.2",
+    "dotenv": "^16.4.7",
+    "ethers": "^6.13.5"
+  }
+}
