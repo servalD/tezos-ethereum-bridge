@@ -33,18 +33,24 @@ contract Vault is Ownable{
     }
 
     modifier hasTezAddress(address user) {
-        require(bytes(tezAddresses[msg.sender]).length > 0, tezAddressNotDefined());
+        if (bytes(tezAddresses[msg.sender]).length > 0) {
+            revert tezAddressNotDefined();
+        }
         _;
     }
 
     function setTezAddress(string memory tezAddress) external {
-        require(bytes(tezAddresses[msg.sender]).length > 0, TezAddressAlreadyDefined());
+        if (bytes(tezAddresses[msg.sender]).length > 0){
+            revert TezAddressAlreadyDefined();
+        }
         tezAddresses[msg.sender] = tezAddress;
     }
 
     function deposit(uint256 amount) external hasTezAddress(msg.sender) {
 
-        require(token.balanceOf(msg.sender) >= amount, InsufficientBalance());
+        if (token.balanceOf(msg.sender) >= amount){
+            revert InsufficientBalance();
+        }
 
         token.transferFrom(msg.sender, address(this), amount);
 
@@ -54,21 +60,27 @@ contract Vault is Ownable{
     }
 
     function requestUnlock(uint256 amount) external hasTezAddress(msg.sender){
-        require(lockedBalances[msg.sender] >= amount, InsufficientBalance());
+        if (lockedBalances[msg.sender] >= amount){
+            revert InsufficientBalance();
+        }
         lockedBalances[msg.sender] -= amount;
         RequestedBalances[msg.sender] += amount;
         emit RequestUnlock(msg.sender, tezAddresses[msg.sender], amount);
     }
 
     function unlock(address user) external onlyOwner hasTezAddress(user) {
-        require(RequestedBalances[user] <= 0, NothintToUnlock());
+        if (RequestedBalances[user] <= 0){
+            revert NothintToUnlock();
+        }
         uint256 amount = RequestedBalances[user];
         RequestedBalances[user] = 0;
         balances[user] += amount;
     }
 
     function withdraw(uint256 amount) external {
-        require(balances[msg.sender] >= amount, InsufficientBalance());
+        if (balances[msg.sender] >= amount){
+            revert InsufficientBalance();
+        }
         balances[msg.sender] -= amount;
         token.transfer(msg.sender, amount);
         emit Withdraw(msg.sender, amount);
